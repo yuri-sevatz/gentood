@@ -7,7 +7,7 @@ class Portage:
     @staticmethod
     def _overlay():
         try:
-            subprocess.check_call(['which', 'layman'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            subprocess.check_call(['which', 'layman'], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
             return True
         except subprocess.CalledProcessError:
             return False
