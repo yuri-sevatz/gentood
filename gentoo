@@ -1,0 +1,38 @@
+#!/usr/bin/python
+
+from gentood import Kernel
+from gentood import Portage
+
+import subprocess
+import sys
+
+try:
+    eargs = sys.argv[1:]
+    margs = []
+    pargs = []
+
+    if '--sync' in eargs:
+        eargs.remove('--sync')
+        Portage.sync()
+    for arg in eargs:
+        if arg.startswith('-'):
+            margs.append(arg)
+        else:
+            pargs.append(arg)
+
+    if 'world' in pargs or '@world' in pargs:
+        '''TODO: Detect this dynamically'''
+        Portage.emerge(margs + ['gentoo-sources'])
+        target = Kernel.target()
+        running = Kernel.running()
+        if target.path != running.path:
+            target.configure(running)
+            target.compile()
+            Portage.emerge('@module-rebuild')
+            target.install()
+    if len(eargs):
+        Portage.emerge(eargs)
+        Portage.emerge('--depclean')
+        Portage.emerge('@preserved-rebuild')
+except subprocess.CalledProcessError as e:
+    exit(e.returncode)

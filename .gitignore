@@ -1,0 +1,8 @@
+#Ignore Build Directory
+build/
+
+#Ignore Python Cache
+__pycache__
+
+.*
+!.gitignore
