@@ -22,7 +22,7 @@ try:
 
     if 'world' in pargs or '@world' in pargs:
         '''TODO: Detect this dynamically'''
-        Portage.emerge(margs + ['gentoo-sources'])
+        Portage.emerge(margs + ['--oneshot', 'gentoo-sources'])
         target = Kernel.target()
         running = Kernel.running()
         if target.path != running.path:
