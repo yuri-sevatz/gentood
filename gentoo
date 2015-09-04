@@ -6,30 +6,43 @@ from gentood import Portage
 import subprocess
 import sys
 
-try:
-    eargs = sys.argv[1:]
-    margs = []
-    pargs = []
+eargs = sys.argv[1:]
+margs = []
+sargs = []
+pargs = []
 
+def do_kernel(update):
+    target = Kernel.target()
+    running = Kernel.running()
+    if update:
+        target.configure(running)
+    elif running.path != target.path:
+        sys.stderr.write('Error: Cannot rebuild new kernel, boot/update first! \n')
+        sys.exit(1)
+    target.compile()
+    Portage.emerge('@module-rebuild')
+    target.install()
+
+try:
     if '--sync' in eargs:
         eargs.remove('--sync')
         Portage.sync()
     for arg in eargs:
         if arg.startswith('-'):
             margs.append(arg)
+            sargs.extend([c for c in list(arg) if c != '-'])
         else:
             pargs.append(arg)
 
-    if 'world' in pargs or '@world' in pargs:
-        '''TODO: Detect this dynamically'''
-        Portage.emerge(margs + ['--oneshot', 'gentoo-sources'])
-        target = Kernel.target()
-        running = Kernel.running()
-        if target.path != running.path:
-            target.configure(running)
-            target.compile()
-            Portage.emerge('@module-rebuild')
-            target.install()
+    k_update = '@kernel-update'
+    k_rebuild = '@kernel-rebuild'
+    kargs = set([k_update, k_rebuild]) & set(pargs)
+    if kargs:
+        update = k_update in pargs
+        for karg in kargs:
+            pargs.remove(karg)
+            eargs.remove(karg)
+        do_kernel(update)
     if len(eargs):
         Portage.emerge(eargs)
         Portage.emerge('--depclean')
