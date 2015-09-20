@@ -43,7 +43,7 @@ try:
             pargs.remove(karg)
             eargs.remove(karg)
         do_kernel(update)
-    if len(eargs):
+    if len(pargs):
         Portage.emerge(eargs)
         Portage.emerge('--depclean')
         Portage.emerge('@preserved-rebuild')
