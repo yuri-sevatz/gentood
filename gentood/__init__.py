@@ -17,6 +17,7 @@ class Portage:
         subprocess.check_call(['emerge', '--sync'])
         if Portage._overlay():
             subprocess.check_call(['layman', '-S'])
+        subprocess.check_call(['eselect', 'news', 'read', 'new'])
 
     @staticmethod
     def emerge(*args):
