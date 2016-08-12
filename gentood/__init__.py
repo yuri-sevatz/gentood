@@ -64,4 +64,4 @@ class Kernel:
 
     def install(self):
             subprocess.check_call(['make', '-C', self.path, 'install'])
-            subprocess.check_call(['grub2-mkconfig', '-o', '/boot/grub/grub.cfg'])
+            subprocess.check_call(['grub-mkconfig', '-o', '/boot/grub/grub.cfg'])
