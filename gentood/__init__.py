@@ -5,21 +5,6 @@ import subprocess
 
 class Portage:
     @staticmethod
-    def _overlay():
-        try:
-            subprocess.check_call(['which', 'layman'], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
-            return True
-        except subprocess.CalledProcessError:
-            return False
-
-    @staticmethod
-    def sync():
-        subprocess.check_call(['emerge', '--sync'])
-        if Portage._overlay():
-            subprocess.check_call(['layman', '-S'])
-        subprocess.check_call(['eselect', 'news', 'read', 'new'])
-
-    @staticmethod
     def emerge(*args):
         params = ['emerge']
         for arg in args:

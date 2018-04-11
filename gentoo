@@ -24,9 +24,6 @@ def do_kernel(update):
     target.install()
 
 try:
-    if '--sync' in eargs:
-        eargs.remove('--sync')
-        Portage.sync()
     for arg in eargs:
         if arg.startswith('-'):
             margs.append(arg)
