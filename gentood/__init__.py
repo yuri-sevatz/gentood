@@ -49,4 +49,5 @@ class Kernel:
 
     def install(self):
             subprocess.check_call(['make', '-C', self.path, 'install'])
+            subprocess.check_call(['genkernel', '--install', '--no-ramdisk-modules', 'initramfs'])
             subprocess.check_call(['grub-mkconfig', '-o', '/boot/grub/grub.cfg'])
